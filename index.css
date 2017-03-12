@@ -1,0 +1,40 @@
+html, body {}
+
+.snake {}
+
+.main {
+    margin: 1vw;
+    display: flex;
+    flex-direction: row;
+}
+
+.line {
+    display: flex;
+    flex-direction: column;
+}
+
+.block {
+    border-color: rgb(0, 0, 0);
+    border-width: 0.06vw;
+    border-style: solid;
+    margin: -0.036vw;
+    height: 1.5vw;
+    width: 1.5vw;
+}
+
+.svgText {
+    font-family: 'PingFangSC-Regular';
+    font-size: 100px;
+}
+
+.black {
+    fill: black;
+}
+
+.white {
+    fill: white;
+}
+
+.red {
+    fill: red;
+}

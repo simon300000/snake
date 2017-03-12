@@ -6,24 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-
-
-    <!--[if lt IE 9]>
-  <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
+    <title>🍥Snake</title>
+    <script src="jquery.min.js"></script>
+    <link href="bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
-
     <script type="text/spacebars" name="main">
-       
+        <div class="snake">
+            <div class="main">
+                {{#each grid}}
+                <div class="line">
+                    {{#each this}}
+                    <svg id="{{x}}{{y}}" class="block" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0,0,100,100">
+                      <rect class="{{color}}" width="100" height="100"/>
+                      <text text-anchor = "middle" x="50%" y="50%" dy=".35em" class="svgText {{font}}">{{show}}</text>
+                    </svg> {{/each}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
     </script>
-
     <script src="blaze.js"></script>
     <script src="index.js"></script>
 </head>
 
 <body>
-
 </body>
 
 </html>
