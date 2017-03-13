@@ -1,11 +1,33 @@
-html, body {}
+html, body {
+    height: 100%;
+}
 
-.snake {}
+.snake {
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
 
 .main {
-    margin: 1vw;
     display: flex;
     flex-direction: row;
+    border-color: rgb(0, 209, 255);
+    border-width: 2px;
+    border-style: solid;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    border-color: rgb(0, 209, 255);
+    border-radius: 2vh;
+    border-width: 2px;
+    border-style: solid;
+    padding: 1vh;
+    margin: 1vh;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .line {
@@ -14,12 +36,9 @@ html, body {}
 }
 
 .block {
-    border-color: rgb(0, 0, 0);
-    border-width: 0.06vw;
-    border-style: solid;
-    margin: -0.036vw;
-    height: 1.5vw;
-    width: 1.5vw;
+    margin: -0.2px;
+    height: 3vh;
+    width: 3vh;
 }
 
 .svgText {
@@ -37,4 +56,10 @@ html, body {}
 
 .red {
     fill: red;
+}
+
+.border {
+    stroke: #000000;
+    stroke-miterlimit: 10;
+    stroke-width: 5;
 }

@@ -1,33 +1,87 @@
-let pi = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989"
+let pi = "3•1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665213841469519415116094330572703657595919530921861173819326117931051185480744623799627495673518857527248912279381830119491298336733624406566430860213949463952247371907021798609437027705392171762931767523846748184676694051320005681271452635608277857713427577896091736371787214684409012249534301465495853710507922796892589235420199561121290219608640344181598136297747713099605187072113499999983729780499510597317328160963185950244594553469083026425223082533446850352619311881710100031378387528865875332083814206171776691473035982534904287554687311595628638823537875937519577818577805321712268066130019278766111959092164201989"
 let score = new ReactiveVar(Array())
+score.v = 0
 let direction = new ReactiveVar(undefined)
 let directionCache = undefined
 let pause = new ReactiveVar(false)
 let grid = new ReactiveVar(Array(32))
-blankLocation = [10, 10]
+let border = new ReactiveVar(true)
+let speed = new ReactiveVar(2)
+let blankLocation
 
-let pendingFunction = []
+let pendingFunction
 let timeout
-let start = false
-let step = []
+let start
+let step
 
-for (let x = 0; x < grid.get().length; x++) {
-    grid.get()[x] = Array()
-    for (let y = 0; y < grid.get().length; y++) {
-        grid.get()[x].push({
-            x: x,
-            y: y,
-            show: undefined,
-            color: 'white',
-            font: 'black'
-        })
+function init() {
+    for (let x = 0; x < grid.get().length; x++) {
+        grid.get()[x] = Array()
+        for (let y = 0; y < grid.get().length; y++) {
+            grid.get()[x].push({
+                x: x,
+                y: y,
+                show: undefined,
+                color: 'white',
+                font: 'black'
+            })
+        }
+    }
+
+blankLocation = [10, 10]
+pendingFunction = []
+start = false
+step = []
+
+    for (let i = 0; i < 11; i++) {
+        let location = random()
+        grid.get()[location[0]][location[1]].show = i
+        if (i == 10) {
+            grid.get()[location[0]][location[1]].show = '•'
+        }
     }
 }
 
+init()
 
 
 Template.main.helpers({
     grid: () => grid.get(),
+    border: () => {
+        return border.get() && 'border'
+    },
+    isBorder: () => {
+        return border.get() && 'success' || 'danger'
+    },
+    speed: () => {
+        if (pause.get()) {
+            return 'stop'
+        }
+        return speed.get()
+    },
+    score:()=>{
+      return score.get().length
+    },
+});
+
+Template.main.events({
+    'click #border': e => {
+        border.set(!border.get())
+    },
+    'click #speed': e => {
+        speed.set(speed.get() + 1)
+        if (speed.get() == 4) {
+            speed.set(1)
+        }
+    },
+    'click #restart': e => {
+        score.set(Array())
+        score.v = 0
+        grid.set(Array(32))
+        init()
+        direction.set(undefined)
+        pause.set(false)
+    },
 });
 
 window.onkeydown = e => {
@@ -102,16 +156,18 @@ function random() {
 }
 
 function eat(location) {
-    if (grid.get()[location[0]][location[1]].color == 'black') {
-        grid.get()[location[0]][location[1]].color = 'red'
-        pause.set(true)
-        return true
-    } else if (grid.get()[location[0]][location[1]].show != pi[score.get().length]) {
+    score.v++
+        if (grid.get()[location[0]][location[1]].color == 'black') {
+            grid.get()[location[0]][location[1]].color = 'red'
+            pause.set(true)
+            return true
+        } else
+    if (grid.get()[location[0]][location[1]].show != pi[score.get().length]) {
         grid.get()[location[0]][location[1]].color = 'red'
         pause.set(true)
         return false
     } else {
-        if (pi[score.get().length] != '.') {
+        if (pi[score.get().length] != '•') {
             let addLocation = random()
             grid.get()[addLocation[0]][addLocation[1]].show = pi[score.get().length]
         }
@@ -122,16 +178,8 @@ function eat(location) {
     }
 }
 
-for (let i = 0; i < 11; i++) {
-    let location = random()
-    grid.get()[location[0]][location[1]].show = i
-    if (i == 10) {
-        grid.get()[location[0]][location[1]].show = '.'
-    }
-}
-
-setInterval(function() {
-    if (timeout && (new Date()).getTime() - timeout > 300 && start) {
+const update = () => {
+    if (timeout && (new Date()).getTime() - timeout > 400 && start) {
         pause.set(true)
     }
     timeout = (new Date()).getTime()
@@ -189,7 +237,11 @@ setInterval(function() {
                 }
             }
             for (let i = 0; i < score.get().length; i++) {
-                grid.get()[score.get()[i][0]][score.get()[i][1]].show = pi[i]
+                if (pi[i] == '•') {
+                    grid.get()[score.get()[i][0]][score.get()[i][1]].show = '.'
+                } else {
+                    grid.get()[score.get()[i][0]][score.get()[i][1]].show = pi[i]
+                }
                 grid.get()[score.get()[i][0]][score.get()[i][1]].font = 'white'
 
                 pendingFunction.push(() => {
@@ -202,4 +254,6 @@ setInterval(function() {
     }
     grid._dep.changed()
     score._dep.changed()
-}, 180);
+    setTimeout(update, 300 / speed.get());
+}
+update()

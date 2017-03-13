@@ -17,11 +17,20 @@
                 <div class="line">
                     {{#each this}}
                     <svg id="{{x}}{{y}}" class="block" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0,0,100,100">
-                      <rect class="{{color}}" width="100" height="100"/>
+                      <rect class="{{color}} {{border}}" width="100" height="100"/>
                       <text text-anchor = "middle" x="50%" y="50%" dy=".35em" class="svgText {{font}}">{{show}}</text>
                     </svg> {{/each}}
                 </div>
                 {{/each}}
+            </div>
+            <div class="menu">
+                <h1>Snake <small>π</small></h1>
+                <div class="btn-group" role="group" aria-label="Setting">
+                    <button type="button" id="border" class="btn btn-{{isBorder}}">Border</button>
+                    <button type="button" id="speed" class="btn btn-primary">Speed: {{speed}}</button>
+                </div>
+                <h3>Score <span class="label label-info">{{score}}</span></h3>
+                <button type="button" id="restart" class="btn btn-warning btn-lg">Restart</button>
             </div>
         </div>
     </script>
