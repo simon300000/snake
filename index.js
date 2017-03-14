@@ -28,10 +28,10 @@ function init() {
         }
     }
 
-blankLocation = [10, 10]
-pendingFunction = []
-start = false
-step = []
+    blankLocation = [10, 10]
+    pendingFunction = []
+    start = false
+    step = []
 
     for (let i = 0; i < 11; i++) {
         let location = random()
@@ -47,21 +47,12 @@ init()
 
 Template.main.helpers({
     grid: () => grid.get(),
-    border: () => {
-        return border.get() && 'border'
-    },
+    border: () => border.get() && 'border',
     isBorder: () => {
         return border.get() && 'success' || 'danger'
     },
-    speed: () => {
-        if (pause.get()) {
-            return 'stop'
-        }
-        return speed.get()
-    },
-    score:()=>{
-      return score.get().length
-    },
+    speed: () => pause.get() && 'stop' || speed.get(),
+    score: () => score.get().length,
 });
 
 Template.main.events({
