@@ -53,6 +53,7 @@ Template.main.helpers({
     },
     speed: () => pause.get() && 'stop' || speed.get(),
     score: () => score.get().length,
+    pi: () => `${pi[score.get().length]}${pi[score.get().length+1]}${pi[score.get().length+2]}`
 });
 
 Template.main.events({
